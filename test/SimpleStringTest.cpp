@@ -8,6 +8,9 @@
 #include <boost/assert.hpp>
 #include "StringScanner.h"
 
+extern "C"
+char* yytext;
+
 std::vector<ScannerOutput> getTestdata() {
     return std::vector<ScannerOutput>{
         std::make_pair(Token::INTEGER, "1234"),
@@ -24,6 +27,7 @@ std::vector<ScannerOutput> getTestdata() {
         std::make_pair(Token::BIN_OPERATOR, "<<"),
         std::make_pair(Token::BIN_OPERATOR, "+"),
         std::make_pair(Token::BIN_OPERATOR, "*"),
+        std::make_pair(Token::BIN_OPERATOR, "="),
         std::make_pair(Token::DUCK_BILL, "<foo>"),
         std::make_pair(Token::DUCK_BILL, "<<bar>"),
         std::make_pair(Token::STRING, "\"foo\""),
@@ -40,6 +44,11 @@ std::vector<ScannerOutput> getTestdata() {
         std::make_pair(Token::BRACKES, ")"),
         std::make_pair(Token::BRACKES, "{"),
         std::make_pair(Token::BRACKES, "}"),
+        std::make_pair(Token::COMMENT, "//abc\n"),
+        std::make_pair(Token::COMMENT, "/**/"),
+        std::make_pair(Token::COMMENT, "/*abc*/"),
+        std::make_pair(Token::COMMENT, "/*a\n bc*/"),
+        std::make_pair(Token::COMMENT, "/*\n * NOTHING*/"),
     };
 }
 
@@ -63,9 +72,33 @@ BOOST_AUTO_TEST_CASE(multi) {
         StringScanner s(std::get<TOKEN_STRING>(item));
         auto result = s.read();
         BOOST_TEST_CONTEXT("scanning '" + std::get<TOKEN_STRING>(item) + "'") {
+            std::cout << "\nscanned: '" << yytext << "', expected '" << std::get<TOKEN_STRING>(item) << "'" <<std::endl;
             BOOST_CHECK_EQUAL(std::get<TOKEN>(item), std::get<TOKEN>(result));
             BOOST_CHECK_EQUAL(std::get<TOKEN_STRING>(item), std::get<TOKEN_STRING>(result));
         }
     }
+}
+
+BOOST_AUTO_TEST_CASE(multilinecomment) {
+    std::string commentline = "/****\n NOTHING*/";
+    StringScanner s(commentline);
+    auto result = s.read();
+    std::cout << "expected to read: '" << commentline << "', got: '" << std::get<TOKEN_STRING>(result) << "'" << std::endl;
+    BOOST_CHECK_EQUAL(std::get<TOKEN_STRING>(result), commentline);
+}
+
+BOOST_AUTO_TEST_CASE(zeroisanaturalnumber) {
+    std::string something_went_wrong_here = "\tU = 0,";
+    StringScanner s(something_went_wrong_here);
+    for (auto t = s.read(); std::get<TOKEN>(t) != Token::END_OF_FILE; t = s.read()) {
+        std::cout << std::get<TOKEN_STRING>(t) << std::endl;
+    }
+}
+BOOST_AUTO_TEST_CASE(comparison) {
+   std::string something_went_wrong_here = "((x)!=NULL) POV_FREE(x)";
+   StringScanner s(something_went_wrong_here);
+   for (auto t = s.read(); std::get<TOKEN>(t) != Token::END_OF_FILE; t = s.read()) {
+       std::cout << std::get<TOKEN_STRING>(t) << std::endl;
+   }
 }
 BOOST_AUTO_TEST_SUITE_END()

@@ -37,6 +37,7 @@ Scanner::Scanner() {
     assignment[14] = Token::ARGUMENT_LIST;
     assignment[15] = Token::BRACKES;
     assignment[16] = Token::PREPROCESSOR;
+    assignment[17] = Token::COMMENT;
 
 }
 

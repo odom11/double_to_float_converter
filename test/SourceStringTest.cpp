@@ -20,4 +20,36 @@ BOOST_AUTO_TEST_CASE(hello_world) {
         scanner_result.push_back(result);
     }
 }
+
+BOOST_AUTO_TEST_CASE(fromSourceCode) {
+    std::string foo = "/****************************************************************************\n";
+    foo += "*                  frame.h\n";
+    foo += "*\n";
+    foo += "* This header file is included by all C modules in POV-Ray. It defines all\n";
+    foo += "* globally-accessible types and constants.\n";
+    foo += "*\n";
+    foo += "* Vision(tm) Ray Tracer version 3.6.\n";
+    foo += "* Copyright 1991-2003 Persistence of Vision Team\n";
+    foo += "* Copyright 2003-2004 Persistence of Vision Raytracer Pty. Ltd.\n";
+    foo += "*---------------------------------------------------------------------------\n";
+    foo += "* NOTICE: This source code file is provided so that users may experiment:\n";
+    foo += " *****************************************************************************/";
+    StringScanner s(foo);
+    auto result = s.read();
+    BOOST_CHECK_EQUAL(foo, std::get<TOKEN_STRING>(result));
+    //std::cout << "got: " << std::endl << std::get<TOKEN_STRING>(result) << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(exclamation_mark) {
+    std::string foo = "/*\n";
+    foo += " * You have to define the macros ";
+    foo += "POVRAY_BEGIN_COOPERATE";
+    //foo += " and POVRAY_END_COOPERATE!";
+    foo += " */";
+    std::cout << foo << std::endl;
+    StringScanner s(foo);
+    auto result = s.read();
+    BOOST_CHECK_EQUAL(foo, std::get<TOKEN_STRING>(result));
+    std::cout << "got: " << std::endl << std::get<TOKEN_STRING>(result) << std::endl;
+}
 BOOST_AUTO_TEST_SUITE_END()
