@@ -17,8 +17,6 @@ extern int column_number, line_number;
 Scanner::~Scanner() {}
 
 Scanner::Scanner() {
-    column_number = 1;
-    line_number = 1;
     assignment[0] = Token::END_OF_FILE;
     assignment[1] = Token::INTEGER;
     assignment[2] = Token::DOUBLE;
@@ -48,6 +46,11 @@ std::pair<Token, std::string> Scanner::read() {
     }
     auto it = assignment.find(number);
     return std::make_pair(it->second, std::string(yytext));
+}
+
+void Scanner::resetLineCounter() {
+    column_number = 1;
+    line_number = 1;
 }
 
 //std::ostream& operator<<(std::ostream& os, Token t) {

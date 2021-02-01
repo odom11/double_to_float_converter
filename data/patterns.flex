@@ -6,6 +6,7 @@ LETTER  [a-zA-Z]
 MATH_FUNCTION   (sin|cos|atan2|sqrt|pow)
 DUCK_BILL       <[^>]*>
 STRING          \"[^\"]*\"
+CHAR            '([^\\]|\\.)?'
 IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
 COMMENT_LINE    "//"[^\n]*\n
 COMMENT_END     "*/"
@@ -21,6 +22,7 @@ float               {column_number += yyleng;return 5;}
 (\+|-|\*|\/|<<|=|!=)   {column_number += yyleng;return 7;}
 {DUCK_BILL}         {column_number += yyleng;return 8;}
 {STRING}            {column_number += yyleng;return 9;}
+{CHAR}              {column_number += yyleng;return 9;}
 {IDENTIFIER}        {column_number += yyleng;return 10;}
 <<EOF>> {
             printf("reached end of file\n"); return 0;
@@ -34,13 +36,6 @@ float               {column_number += yyleng;return 5;}
 (\[|\]|\(|\)|\{|\}) {column_number += yyleng;return 15;}
 #                   {column_number += yyleng;return 16;}
 {COMMENT_LINE}      {column_number = 1; line_number += 1; return 17;}
-{MULTILINE_COMMENT} {
-                        int i, c, l;
-                        for (i = 0, c = 0, l = 0; yytext[i] != '\0'; yytext[i] == '\n' ? ++c, ++i, l = 0: ++i, ++l);
-                        line_number += c;
-                        column_number = l;
-                        return 17;
-                    }
 .                   {
                         printf("unidentified pattern '%s' in line %d column %d\n", yytext, line_number, column_number);
                         return -1;

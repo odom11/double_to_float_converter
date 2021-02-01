@@ -5,11 +5,13 @@
 #ifndef DOUBLE_TO_FLOAT_STRINGSCANNER_H
 #define DOUBLE_TO_FLOAT_STRINGSCANNER_H
 
-#include "../src/scanner/Scanner.h"
+#include "Scanner.h"
 
 class StringScanner : public Scanner {
 public:
     explicit StringScanner(const std::string& str);
+    void incrementLineGlobal(int n);
+    const std::string& getString() {return str;};
 private:
     std::string str;
 };

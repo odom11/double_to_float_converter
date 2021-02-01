@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include "scanner/Scanner.h"
-#include "scanner/FileScanner.h"
+#include "scanner/MultilineCommentResistantStringScanner.h"
 #include "parser/DoubleToFloatParser.h"
 
 int main(int argc, char* argv[]) {
@@ -14,7 +14,10 @@ int main(int argc, char* argv[]) {
     std::cout << "inputfile: " << inputfile << std::endl;
     std::cout << "outputfile: " << outputfile << std::endl;
 
-    FileScanner scanner(inputfile);
+    std::ifstream ifs (inputfile);
+    std::string filecontent;
+    getline (ifs, filecontent, (char) ifs.eof());
+    MultilineCommentResistantStringScanner scanner(filecontent);
     DoubleToFloatParser parser(scanner);
     std::stringbuf parsed = parser.parse();
     std::ofstream of;

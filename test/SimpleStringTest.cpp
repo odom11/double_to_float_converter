@@ -6,7 +6,8 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/assert.hpp>
-#include "StringScanner.h"
+#include "../src/scanner/StringScanner.h"
+#include "../src/scanner/MultilineCommentResistantStringScanner.h"
 
 extern "C"
 char* yytext;
@@ -31,6 +32,8 @@ std::vector<ScannerOutput> getTestdata() {
         std::make_pair(Token::DUCK_BILL, "<foo>"),
         std::make_pair(Token::DUCK_BILL, "<<bar>"),
         std::make_pair(Token::STRING, "\"foo\""),
+        std::make_pair(Token::STRING, "'f'"),
+        std::make_pair(Token::STRING, "'\\\\'"),
         std::make_pair(Token::IDENTIFIER, "sinfa"),
         std::make_pair(Token::MATH_FUNCTION_F, "sinf"),
         std::make_pair(Token::BLANK, " "),
@@ -69,7 +72,7 @@ BOOST_AUTO_TEST_CASE(testInteger) {
 BOOST_AUTO_TEST_CASE(multi) {
     auto testdata = getTestdata();
     for (auto&  item : testdata) {
-        StringScanner s(std::get<TOKEN_STRING>(item));
+        MultilineCommentResistantStringScanner s(std::get<TOKEN_STRING>(item));
         auto result = s.read();
         BOOST_TEST_CONTEXT("scanning '" + std::get<TOKEN_STRING>(item) + "'") {
             std::cout << "\nscanned: '" << yytext << "', expected '" << std::get<TOKEN_STRING>(item) << "'" <<std::endl;
@@ -81,7 +84,7 @@ BOOST_AUTO_TEST_CASE(multi) {
 
 BOOST_AUTO_TEST_CASE(multilinecomment) {
     std::string commentline = "/****\n NOTHING*/";
-    StringScanner s(commentline);
+    MultilineCommentResistantStringScanner s(commentline);
     auto result = s.read();
     std::cout << "expected to read: '" << commentline << "', got: '" << std::get<TOKEN_STRING>(result) << "'" << std::endl;
     BOOST_CHECK_EQUAL(std::get<TOKEN_STRING>(result), commentline);
@@ -100,5 +103,23 @@ BOOST_AUTO_TEST_CASE(comparison) {
    for (auto t = s.read(); std::get<TOKEN>(t) != Token::END_OF_FILE; t = s.read()) {
        std::cout << std::get<TOKEN_STRING>(t) << std::endl;
    }
+}
+
+BOOST_AUTO_TEST_CASE(testIntegerRobustScanner) {
+    std::string testString = "1234";
+    MultilineCommentResistantStringScanner s(testString);
+
+    auto result = s.read();
+    BOOST_CHECK_EQUAL(Token::INTEGER,std::get<TOKEN>(result));
+    BOOST_CHECK_EQUAL(testString, std::get<TOKEN_STRING>(result));
+}
+
+BOOST_AUTO_TEST_CASE(testsinglelinecomment) {
+    std::string testString = "//abc\n";
+    MultilineCommentResistantStringScanner s(testString);
+
+    auto result = s.read();
+    BOOST_CHECK_EQUAL(Token::COMMENT, std::get<TOKEN>(result));
+    BOOST_CHECK_EQUAL(testString, std::get<TOKEN_STRING>(result));
 }
 BOOST_AUTO_TEST_SUITE_END()

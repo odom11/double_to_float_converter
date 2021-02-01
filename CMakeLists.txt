@@ -10,7 +10,7 @@ include_directories(BEFORE include)
 
 file(GLOB_RECURSE sourcefiles src/*.cpp)
 add_executable(double_to_float ${sourcefiles} ${FLEX_tokens_OUTPUTS})
-target_link_libraries(double_to_float -lfl)
+target_link_libraries(double_to_float ${FLEX_LIBRARIES})
 
 enable_testing()
 add_subdirectory("./test")

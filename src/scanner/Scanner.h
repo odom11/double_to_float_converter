@@ -27,6 +27,7 @@ public:
     Scanner();
     virtual ~Scanner() = 0;
     virtual ScannerOutput read();
+    void resetLineCounter();
 private:
     std::unordered_map<int, Token> assignment;
 };
