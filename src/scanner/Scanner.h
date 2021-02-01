@@ -17,16 +17,16 @@ enum class Token {
     END_OF_FILE,
     INTEGER,
     DOUBLE, FLOAT, MATH_FUNCTION, FLOAT_TYPE, END_OF_STATEMENT, BIN_OPERATOR, DUCK_BILL, STRING, IDENTIFIER,
-    MATH_FUNCTION_F, BLANK, NAMESPACE, DEREF, ARGUMENT_LIST, BRACKES
+    MATH_FUNCTION_F, BLANK, NAMESPACE, DEREF, ARGUMENT_LIST, BRACKES, PREPROCESSOR
 };
 
-using data = std::pair<Token, std::string>;
+using ScannerOutput = std::pair<Token, std::string>;
 
 class Scanner {
 public:
     Scanner();
     virtual ~Scanner() = 0;
-    virtual data read();
+    virtual ScannerOutput read();
 private:
     std::unordered_map<int, Token> assignment;
 };

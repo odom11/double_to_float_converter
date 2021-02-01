@@ -5,9 +5,14 @@ set(CMAKE_CXX_STANDARD 20)
 FIND_PACKAGE(FLEX REQUIRED)
 
 FLEX_TARGET(tokens data/patterns.flex ${CMAKE_CURRENT_BINARY_DIR}/lexer.c)
-add_executable(double_to_float src/main.cpp ${FLEX_tokens_OUTPUTS} src/Scanner.cpp)
+
+include_directories(BEFORE include)
+
+file(GLOB_RECURSE sourcefiles src/*.cpp)
+add_executable(double_to_float ${sourcefiles} ${FLEX_tokens_OUTPUTS})
 target_link_libraries(double_to_float -lfl)
 
 enable_testing()
 add_subdirectory("./test")
-add_test(Name test/SimpleStringTest COMMAND SimpleStringTest)
+add_test(NAME test/SimpleStringTest COMMAND SimpleStringTest)
+add_test(NAME test/SourceStringTest COMMAND SourceStringTest)

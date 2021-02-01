@@ -7,26 +7,29 @@ MATH_FUNCTION   (sin|cos|atan2|sqrt|pow)
 DUCK_BILL       <[^>]*>
 STRING          \"[^\"]*\"
 IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
-BLANK           [ \n]+
+    int column_number = 1; int line_number = 1;
 %%
-{INTEGER}           {return 1;}
-{DOUBLE}            {return 2;}
-{FLOAT}             {return 3;}
-{MATH_FUNCTION}     {return 4;}
-{MATH_FUNCTION}f    {return 41;}
-float               {return 5;}
-;                   {return 6;}
-(\+|-|\*|\/|<<)     {return 7;}
-{DUCK_BILL}         {return 8;}
-{STRING}            {return 9;}
-{IDENTIFIER}        {return 10;}
+{INTEGER}           {column_number += yyleng;return 1;}
+{DOUBLE}            {column_number += yyleng;return 2;}
+{FLOAT}             {column_number += yyleng;return 3;}
+{MATH_FUNCTION}     {column_number += yyleng;return 4;}
+{MATH_FUNCTION}f    {column_number += yyleng;return 41;}
+float               {column_number += yyleng;return 5;}
+;                   {column_number += yyleng;return 6;}
+(\+|-|\*|\/|<<)     {column_number += yyleng;return 7;}
+{DUCK_BILL}         {column_number += yyleng;return 8;}
+{STRING}            {column_number += yyleng;return 9;}
+{IDENTIFIER}        {column_number += yyleng;return 10;}
 <<EOF>> {
             printf("reached end of file\n"); return 0;
         }
-{BLANK}             {return 11;}
-{IDENTIFIER}?"::"{IDENTIFIER}   {return 12;}
-("."|->)            {return 13;}
-,                   {return 14;}
-(\[|\]|\(|\)|\{|\}) {return 15;}
-.                   {return -1;}
+[ ]+                {column_number += yyleng;return 11;}
+\t+                 {column_number += yyleng;return 11;}
+\n                  {++line_number;column_number = 1;return 11;}
+("::")              {column_number += yyleng;return 12;}
+("."|->)            {column_number += yyleng;return 13;}
+,                   {column_number += yyleng;return 14;}
+(\[|\]|\(|\)|\{|\}) {column_number += yyleng;return 15;}
+#                   {column_number += yyleng;return 16;}
+.                   {printf("unidentified pattern in line %d column %d\n", line_number, column_number);return -1;}
 %%

@@ -8,8 +8,8 @@
 #include <boost/assert.hpp>
 #include "StringScanner.h"
 
-std::vector<data> getTestdata() {
-    return std::vector<data>{
+std::vector<ScannerOutput> getTestdata() {
+    return std::vector<ScannerOutput>{
         std::make_pair(Token::INTEGER, "1234"),
         std::make_pair(Token::DOUBLE, "123.45"),
         std::make_pair(Token::DOUBLE, "123."),
@@ -30,8 +30,8 @@ std::vector<data> getTestdata() {
         std::make_pair(Token::IDENTIFIER, "sinfa"),
         std::make_pair(Token::MATH_FUNCTION_F, "sinf"),
         std::make_pair(Token::BLANK, " "),
-        std::make_pair(Token::BLANK, " \n "),
-        std::make_pair(Token::NAMESPACE, "foo::bar"),
+        std::make_pair(Token::BLANK, "\n"),
+        std::make_pair(Token::NAMESPACE, "::"),
         std::make_pair(Token::DEREF, "->"),
         std::make_pair(Token::ARGUMENT_LIST, ","),
         std::make_pair(Token::BRACKES, "["),
@@ -68,7 +68,4 @@ BOOST_AUTO_TEST_CASE(multi) {
         }
     }
 }
-
-
-
 BOOST_AUTO_TEST_SUITE_END()

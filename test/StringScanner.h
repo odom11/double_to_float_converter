@@ -5,7 +5,7 @@
 #ifndef DOUBLE_TO_FLOAT_STRINGSCANNER_H
 #define DOUBLE_TO_FLOAT_STRINGSCANNER_H
 
-#include "../src/Scanner.h"
+#include "../src/scanner/Scanner.h"
 
 class StringScanner : public Scanner {
 public:
