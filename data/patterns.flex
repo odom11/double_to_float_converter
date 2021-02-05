@@ -4,9 +4,8 @@ DOUBLE  {INTEGER}"."{DIGIT}*|"."{DIGIT}+
 FLOAT   {DOUBLE}(f|F)
 LETTER  [a-zA-Z]
 MATH_FUNCTION   (sin|cos|atan2|sqrt|pow)
-DUCK_BILL       <[^>]*>
-STRING          \"[^\"]*\"
-CHAR            '([^\\]|\\.)?'
+STRING          \"([^\"\n]|(\\\"))*\"
+CHAR            '([^\\]|\\.|\\032|[^']*)?'
 IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
 COMMENT_LINE    "//"[^\n]*
 COMMENT_END     "*/"
@@ -20,8 +19,7 @@ double              {column_number += yyleng;return 20;}
 {MATH_FUNCTION}f    {column_number += yyleng;return 41;}
 float               {column_number += yyleng;return 5;}
 ;                   {column_number += yyleng;return 6;}
-(\+|-|\*|\/|<<|=|!=|<|>|\?|:)   {column_number += yyleng;return 7;}
-{DUCK_BILL}         {column_number += yyleng;return 8;}
+(\+|-|\*|\/|<<|=|!|<|>|\?|:|\||%|^)   {column_number += yyleng;return 7;}
 {STRING}            {column_number += yyleng;return 9;}
 {CHAR}              {column_number += yyleng;return 9;}
 {IDENTIFIER}        {column_number += yyleng;return 10;}

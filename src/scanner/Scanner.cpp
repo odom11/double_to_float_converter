@@ -12,6 +12,9 @@ int yylex(void);
 extern "C"
 char *yytext;
 
+extern "C"
+int yyread(void);
+
 extern int column_number, line_number;
 
 Scanner::~Scanner() {}
