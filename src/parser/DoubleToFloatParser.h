@@ -7,14 +7,18 @@
 
 #include <string>
 #include <sstream>
+#include <unordered_map>
+#include <functional>
 #include "../scanner/Scanner.h"
 
 class DoubleToFloatParser {
 public:
     DoubleToFloatParser(Scanner& scanner);
-    std::stringbuf parse();
+    std::stringbuf parse() const;
 private:
+    const std::string processScannerOutput(const ScannerOutput& output) const;
     Scanner& scanner;
+    std::unordered_map<Token, std::function<std::string(const std::string&)>> processors;
 };
 
 

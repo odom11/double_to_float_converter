@@ -23,7 +23,6 @@ private:
     const std::string filecontent;
     decltype(filecontent.begin()) it;
     std::unique_ptr<StringScanner> currentStringScanner;
-    bool currentScannerIsDone;
 };
 
 

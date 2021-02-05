@@ -7,7 +7,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/assert.hpp>
-#include "../src/scanner/MultilineCommentResistantStringScanner.h"
+#include "../../src/scanner/MultilineCommentResistantStringScanner.h"
 
 BOOST_AUTO_TEST_SUITE(SourceStringTestSuite)
 BOOST_AUTO_TEST_CASE(hello_world) {

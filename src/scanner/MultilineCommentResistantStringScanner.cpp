@@ -75,7 +75,10 @@ bool MultilineCommentResistantStringScanner::isAtMultilineComment() {
 
 void MultilineCommentResistantStringScanner::updateLinenumberAndColumnGlobals(const std::string &comment) {
     int i, line_count, col_inc;
-    for (i = 0, line_count = 0, col_inc = 0; comment[i] != '\0'; comment[i] == '\n' ? ++line_count, ++i, col_inc = 0, column_number = 0 : ++i, ++col_inc);
+    for (
+            i = 0, line_count = 0, col_inc = 0;
+            comment[i] != '\0';
+            comment[i] == '\n' ? ++line_count, ++i, col_inc = 0, column_number = 1 : ++i, ++col_inc);
     line_number += line_count;
     column_number += col_inc;
 }

@@ -5,9 +5,8 @@
 #define BOOST_TEST_MODULE "SimpleStringTest"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/assert.hpp>
-#include "../src/scanner/StringScanner.h"
-#include "../src/scanner/MultilineCommentResistantStringScanner.h"
+#include "../../src/scanner/StringScanner.h"
+#include "../../src/scanner/MultilineCommentResistantStringScanner.h"
 
 extern "C"
 char* yytext;
@@ -37,9 +36,10 @@ std::vector<ScannerOutput> getTestdata() {
         std::make_pair(Token::IDENTIFIER, "sinfa"),
         std::make_pair(Token::MATH_FUNCTION_F, "sinf"),
         std::make_pair(Token::BLANK, " "),
-        std::make_pair(Token::BLANK, "\n"),
+        std::make_pair(Token::NEWLINE, "\n"),
         std::make_pair(Token::NAMESPACE, "::"),
         std::make_pair(Token::DEREF, "->"),
+        std::make_pair(Token::DEREF, "."),
         std::make_pair(Token::ARGUMENT_LIST, ","),
         std::make_pair(Token::BRACKES, "["),
         std::make_pair(Token::BRACKES, "]"),
@@ -47,11 +47,14 @@ std::vector<ScannerOutput> getTestdata() {
         std::make_pair(Token::BRACKES, ")"),
         std::make_pair(Token::BRACKES, "{"),
         std::make_pair(Token::BRACKES, "}"),
-        std::make_pair(Token::COMMENT, "//abc\n"),
+        std::make_pair(Token::COMMENT, "//abc"),
         std::make_pair(Token::COMMENT, "/**/"),
         std::make_pair(Token::COMMENT, "/*abc*/"),
         std::make_pair(Token::COMMENT, "/*a\n bc*/"),
         std::make_pair(Token::COMMENT, "/*\n * NOTHING*/"),
+        std::make_pair(Token::OTHER, "&"),
+        std::make_pair(Token::OTHER, "~"),
+        std::make_pair(Token::DOUBLE_TYPE, "double"),
     };
 }
 
@@ -115,7 +118,7 @@ BOOST_AUTO_TEST_CASE(testIntegerRobustScanner) {
 }
 
 BOOST_AUTO_TEST_CASE(testsinglelinecomment) {
-    std::string testString = "//abc\n";
+    std::string testString = "//abc";
     MultilineCommentResistantStringScanner s(testString);
 
     auto result = s.read();

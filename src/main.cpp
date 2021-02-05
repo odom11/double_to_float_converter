@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
     std::string filecontent;
     getline (ifs, filecontent, (char) ifs.eof());
     MultilineCommentResistantStringScanner scanner(filecontent);
+    scanner.resetLineCounter();
     DoubleToFloatParser parser(scanner);
     std::stringbuf parsed = parser.parse();
-    std::ofstream of;
-    of.open(outputfile);
+    std::ofstream of(outputfile, std::ios::trunc);
     if (!of.is_open()) {
         throw std::runtime_error("error opening output file");
     }

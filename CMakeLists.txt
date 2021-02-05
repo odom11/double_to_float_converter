@@ -14,5 +14,3 @@ target_link_libraries(double_to_float ${FLEX_LIBRARIES})
 
 enable_testing()
 add_subdirectory("./test")
-add_test(NAME test/SimpleStringTest COMMAND SimpleStringTest)
-add_test(NAME test/SourceStringTest COMMAND SourceStringTest)

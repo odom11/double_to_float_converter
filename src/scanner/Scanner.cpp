@@ -36,7 +36,9 @@ Scanner::Scanner() {
     assignment[15] = Token::BRACKES;
     assignment[16] = Token::PREPROCESSOR;
     assignment[17] = Token::COMMENT;
-
+    assignment[18] = Token::OTHER;
+    assignment[19] = Token::NEWLINE;
+    assignment[20] = Token::DOUBLE_TYPE;
 }
 
 std::pair<Token, std::string> Scanner::read() {
@@ -52,7 +54,3 @@ void Scanner::resetLineCounter() {
     column_number = 1;
     line_number = 1;
 }
-
-//std::ostream& operator<<(std::ostream& os, Token t) {
-//    os << std::to_string(as_integer(t));
-//};
