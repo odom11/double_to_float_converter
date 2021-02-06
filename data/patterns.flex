@@ -1,9 +1,9 @@
 DIGIT   [0-9]
 INTEGER  [1-9]{DIGIT}*|{DIGIT}
-DOUBLE  {INTEGER}"."{DIGIT}*|"."{DIGIT}+
+DOUBLE  ({INTEGER}"."{DIGIT}*|"."{DIGIT}+)((e|E)(\+|-)?{INTEGER})?
 FLOAT   {DOUBLE}(f|F)
 LETTER  [a-zA-Z]
-MATH_FUNCTION   (sin|cos|atan2|sqrt|pow)
+MATH_FUNCTION   (sin|cos|atan2|sqrt|pow|exp|tan|asin|acos|asin|atan|sinh|cosh|tanh|asinh|acosh|atanh|floor|ceil|log|log10|fmod|fabs)
 STRING          \"([^\"\n]|(\\\"))*\"
 CHAR            '([^\\]|\\.|\\032|[^']*)?'
 IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
