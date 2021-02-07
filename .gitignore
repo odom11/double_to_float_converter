@@ -116,3 +116,4 @@ _deps
 *.app
 
 build/
+release/
